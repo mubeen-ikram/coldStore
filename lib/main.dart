@@ -1,5 +1,8 @@
 import 'package:coldstore/Screens/AddRecord.dart';
+import 'package:coldstore/Screens/showRecords.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 // import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
@@ -25,48 +28,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
 
-  //
-  // Future<void> _askPermissions() async {
-  //   PermissionStatus permissionStatus = await _getContactPermission();
-  //   if (permissionStatus != PermissionStatus.granted) {
-  //     _handleInvalidPermissions(permissionStatus);
-  //   }
-  // }
-  //
-  // Future<PermissionStatus> _getContactPermission() async {
-  //   PermissionStatus permission = await PermissionHandler()
-  //       .checkPermissionStatus(PermissionGroup.contacts);
-  //   if (permission != PermissionStatus.granted &&
-  //       permission != PermissionStatus.disabled) {
-  //     Map<PermissionGroup, PermissionStatus> permissionStatus =
-  //     await PermissionHandler()
-  //         .requestPermissions([PermissionGroup.contacts]);
-  //     return permissionStatus[PermissionGroup.contacts] ??
-  //         PermissionStatus.unknown;
-  //   } else {
-  //     return permission;
-  //   }
-  // }
-  //
-  // void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-  //   if (permissionStatus == PermissionStatus.denied) {
-  //     throw PlatformException(
-  //         code: "PERMISSION_DENIED",
-  //         message: "Access to Contact  data denied",
-  //         details: null);
-  //   } else if (permissionStatus == PermissionStatus.disabled) {
-  //     throw PlatformException(
-  //         code: "PERMISSION_DISABLED",
-  //         message: "Contact data is not available on device",
-  //         details: null);
-  //   }
-  // }
-  //
+
+  Future<void> _askPermissions() async {
+    if (await Permission.contacts.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+    }
+
+// You can request multiple permissions at once.
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.location,
+      Permission.storage,
+    ].request();
+  }
+
+
 
 
   @override
   void initState() {
     super.initState();
+    _askPermissions();
   }
 
   Widget build(BuildContext context) {
@@ -77,14 +58,14 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             RaisedButton(
-              child: const Text('Select Contact'),
+              child: const Text('Add Record'),
               onPressed: () =>  Navigator.push(
                   context, MaterialPageRoute(builder: (context) => AddRecord())) ,
             ),
             RaisedButton(
-              child: const Text('Native Contacts picker'),
-              onPressed: () =>null
-                  ,
+              child: const Text('See Record'),
+              onPressed: () =>Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ShowRecords())),
             ),
           ],
         ),
