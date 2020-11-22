@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ColdStoreTransaction{
+class ColdStoreInTransaction{
   String transactionId;
   String contactNumber;
   String contactName;
@@ -22,7 +22,7 @@ class ColdStoreTransaction{
   DateTime currentDate;
 
 
-  ColdStoreTransaction(
+  ColdStoreInTransaction(
       {this.transactionId,
         this.contactNumber,
         this.contactName,
@@ -78,6 +78,49 @@ class ColdStoreTransaction{
     this.height = doc.data['height'];
     this.remainingBori = doc.data['remainingBori'];
     this.remainingTora = doc.data['remainingTora'];
+    this.currentDate = doc.data['currentDate'].toDate();
+  }
+}
+class ColdStoreOutTransaction{
+  String transactionId;
+  String inTransactionId;
+  String boriBefore;
+  String toraBefore;
+  String boriAfter;
+  String toraAfter;
+  DateTime currentDate;
+
+
+  ColdStoreOutTransaction(
+      {
+        this.transactionId,
+        this.inTransactionId,
+        this.boriBefore,
+        this.toraBefore,
+        this.boriAfter,
+        this.toraAfter,
+        this.currentDate,
+      });
+
+  Map<String,dynamic> toMap() {
+    return {
+      'transactionId': transactionId,
+      'inTransactionId': inTransactionId,
+      'boriBefore': boriBefore,
+      'toraBefore': toraBefore,
+      'boriAfter': boriAfter,
+      'toraAfter': toraAfter,
+      'currentDate': currentDate,
+    };
+  }
+
+  void fromMap(DocumentSnapshot doc) {
+    this.transactionId = doc.data['transactionId'] ?? '';
+    this.inTransactionId = doc.data['inTransactionId'] ?? '';
+    this.boriBefore = doc.data['boriBefore'];
+    this.toraBefore = doc.data['toraBefore'];
+    this.boriAfter = doc.data['boriAfter'] ?? '';
+    this.toraAfter = doc.data['toraAfter'] ?? '';
     this.currentDate = doc.data['currentDate'].toDate();
   }
 }

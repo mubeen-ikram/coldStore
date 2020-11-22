@@ -30,9 +30,9 @@ class _AddRecordState extends State<AddRecord> {
   List<DropdownMenuItem<int>> directionList = [];
   List<String> stringPotatoTypeListList = ['Seed', 'Rashan'];
   List<String> stringRoomTypeListList = ['Room 1', 'Room 2', 'Room 3'];
-  List<String> stringRacksTypeListList = ['Rack 1', 'Rack 2', 'Rack 3'];
+  List<String> stringRacksTypeListList = ['1', '2', '3','4','5'];
   List<String> stringPositionTypeListList = ['Front', 'Back', 'Middle'];
-  List<String> stringLevelTypeListList = ['G', '1', '2', '3', '4'];
+  List<String> stringLevelTypeListList = ['A', 'B', 'C', 'D', 'E'];
   List<String> stringDirectionTypeListList = ['Left', 'Right'];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<DropdownMenuItem<int>> potatoSizeList = [];
@@ -466,31 +466,19 @@ class _AddRecordState extends State<AddRecord> {
           builder: (context) => ErrorDialog(
               'No Input Selected', 'Please input number of Tora or Bori'));
     } else {
-      ColdStoreTransaction currentTransaction = ColdStoreTransaction(
+      ColdStoreInTransaction currentTransaction = ColdStoreInTransaction(
           contactName: _contact.displayName,
           contactNumber: _contact.phones.toList()[0].value,
           currentDate: DateTime.now(),
-          direction: directionList[directionSelected]
-              .child
-              .toString()
-              .split('"')
-              .toList()[1],
+          direction: stringDirectionTypeListList[directionSelected],
           height:
-              levelList[levelSelected].child.toString().split('"').toList()[1],
-          position: positionList[positionSelected]
-              .child
-              .toString()
-              .split('"')
-              .toList()[1],
-          rack: rackList[rackSelected].child.toString().split('"').toList()[1],
-          room: roomList[roomSelected].child.toString().split('"').toList()[1],
-          sizeOfPotato: potatoSizeList[sizeSelected]
-              .child
-              .toString()
-              .split('"')
-              .toList()[1],
+          stringLevelTypeListList[levelSelected],
+          position: stringPositionTypeListList[positionSelected],
+          rack: stringRacksTypeListList[rackSelected],
+          room: stringRoomTypeListList[roomSelected],
+          sizeOfPotato: stringPotatoList[sizeSelected],
           typeOfPotato:
-              typeList[typeSelected].child.toString().split('"').toList()[1],
+          stringPotatoTypeListList[typeSelected],
           marker: _markers.text,
           noOfTora: _noOfTora.text,
           noOfBori: _noOfBori.text,
@@ -498,7 +486,7 @@ class _AddRecordState extends State<AddRecord> {
           remainingTora: _noOfTora.text,
           transactionId: Uuid().v4());
       DatabaseService database = DatabaseService();
-      database.setFuelTransactionData(currentTransaction);
+      database.setInTransactionData(currentTransaction);
       Navigator.pop(context);
     }
   }

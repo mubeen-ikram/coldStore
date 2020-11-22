@@ -11,34 +11,34 @@ class DatabaseService {
   final CollectionReference inTransactionCollection =
   Firestore.instance.collection('ColdStoreInTransactions');
 
-  Stream<List<ColdStoreTransaction>> getAllFuelTransactionsForPhoneNumber(String phoneNumber) {
+  Stream<List<ColdStoreInTransaction>> getAlInTransactionsForPhoneNumber(String phoneNumber) {
     return inTransactionCollection
         .where("contactNumber", isEqualTo: phoneNumber)
         .snapshots()
-        .map(_fuelTransactionDataListFromSnapshot);
+        .map(_inTransactionDataListFromSnapshot);
   }
 
-  Stream<ColdStoreTransaction> getParticularFuelTransaction(String id) {
+  Stream<ColdStoreInTransaction> getParticularInTransaction(String id) {
     return inTransactionCollection
         .document(id)
         .snapshots()
-        .map(_fuelTransactionDataFromSnapshot);
+        .map(_inTransactionDataFromSnapshot);
   }
 
-  List<ColdStoreTransaction> _fuelTransactionDataListFromSnapshot(
+  List<ColdStoreInTransaction> _inTransactionDataListFromSnapshot(
       QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
-      return _fuelTransactionDataFromSnapshot(doc);
+      return _inTransactionDataFromSnapshot(doc);
     }).toList();
   }
 
-  ColdStoreTransaction _fuelTransactionDataFromSnapshot(DocumentSnapshot doc) {
-    ColdStoreTransaction current = ColdStoreTransaction();
+  ColdStoreInTransaction _inTransactionDataFromSnapshot(DocumentSnapshot doc) {
+    ColdStoreInTransaction current = ColdStoreInTransaction();
     current.fromMap(doc);
     return current;
   }
 
-  Future<void> setFuelTransactionData(ColdStoreTransaction transaction) async {
+  Future<void> setInTransactionData(ColdStoreInTransaction transaction) async {
     return await inTransactionCollection
         .document(transaction.transactionId)
         .setData(transaction.toMap());
@@ -53,10 +53,10 @@ class DatabaseService {
         .documentID;
   }
 
-  Stream<List<ColdStoreTransaction>> getAllFuelTransactions() {
+  Stream<List<ColdStoreInTransaction>> getAllFuelTransactions() {
     return inTransactionCollection
         .snapshots()
-        .map(_fuelTransactionDataListFromSnapshot);
+        .map(_inTransactionDataListFromSnapshot);
   }
 
 
@@ -65,49 +65,49 @@ class DatabaseService {
   final CollectionReference outTransactionCollection =
   Firestore.instance.collection('ColdStoreOutTransactions');
 
-  Stream<List<ColdStoreTransaction>> getAllOutTransactionsForPhoneNumber(String phoneNumber) {
+  Stream<List<ColdStoreOutTransaction>> getAllOutTransactionsForPhoneNumber(String phoneNumber) {
     return outTransactionCollection
         .where("contactNumber", isEqualTo: phoneNumber)
         .snapshots()
-        .map(_fuelTransactionDataListFromSnapshot);
+        .map(_outTransactionDataListFromSnapshot);
   }
 
-  Stream<List<ColdStoreTransaction>> getAllOutTransactionsForTransaction(String outTransaction) {
+  Stream<List<ColdStoreOutTransaction>> getAllOutTransactionsForTransaction(String outTransaction) {
     return outTransactionCollection
         .where("inTransactionId", isEqualTo: outTransaction)
         .snapshots()
-        .map(_fuelTransactionDataListFromSnapshot);
+        .map(_outTransactionDataListFromSnapshot);
   }
 
-  Stream<ColdStoreTransaction> getParticularOutTransaction(String id) {
+  Stream<ColdStoreInTransaction> getParticularOutTransaction(String id) {
     return outTransactionCollection
         .document(id)
         .snapshots()
-        .map(_fuelTransactionDataFromSnapshot);
+        .map(_inTransactionDataFromSnapshot);
   }
 
-  List<ColdStoreTransaction> _outTransactionDataListFromSnapshot(
+  List<ColdStoreOutTransaction> _outTransactionDataListFromSnapshot(
       QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return _outTransactionDataFromSnapshot(doc);
     }).toList();
   }
 
-  ColdStoreTransaction _outTransactionDataFromSnapshot(DocumentSnapshot doc) {
-    ColdStoreTransaction current = ColdStoreTransaction();
+  ColdStoreOutTransaction _outTransactionDataFromSnapshot(DocumentSnapshot doc) {
+    ColdStoreOutTransaction current = ColdStoreOutTransaction();
     current.fromMap(doc);
     return current;
   }
 
-  Future<void> setOutTransactionData(ColdStoreTransaction transaction) async {
+  Future<void> setOutTransactionData(ColdStoreOutTransaction transaction) async {
     return await outTransactionCollection
         .document(transaction.transactionId)
         .setData(transaction.toMap());
   }
 
-  Stream<List<ColdStoreTransaction>> getAllOutTransactions() {
+  Stream<List<ColdStoreOutTransaction>> getAllOutTransactions() {
     return outTransactionCollection
         .snapshots()
-        .map(_fuelTransactionDataListFromSnapshot);
+        .map(_outTransactionDataListFromSnapshot);
   }
 }

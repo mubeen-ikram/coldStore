@@ -14,8 +14,8 @@ class ShowRecords extends StatefulWidget {
 }
 
 class _ShowRecordsState extends State<ShowRecords> {
-  List<ColdStoreTransaction> currentTransactions = [];
-
+  List<ColdStoreInTransaction> currentTransactions = [];
+  StreamSubscription currentSubscription;
   @override
   void initState() {
     super.initState();
@@ -42,24 +42,26 @@ class _ShowRecordsState extends State<ShowRecords> {
 
   void getDataFromDatabase() {
     DatabaseService databaseService = DatabaseService();
-    StreamSubscription currentSubscription;
     currentSubscription =
         databaseService.getAllFuelTransactions().listen((event) {
+          event.sort((a,b){
+            return a.currentDate.isBefore(b.currentDate)?1:-1;
+          });
       setState(() {
         currentTransactions = event;
       });
-      currentSubscription.cancel();
     });
   }
 
 
   Widget myCustomWidget(
-      BuildContext context, ColdStoreTransaction currentTransaction) {
+      BuildContext context, ColdStoreInTransaction currentTransaction) {
     return GestureDetector(
       onTap: (){
         gotoDetails(currentTransaction);
       },
-      child: Card(
+      child: Card(  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),),
         color: Colors.black,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -162,29 +164,22 @@ class _ShowRecordsState extends State<ShowRecords> {
     );
   }
 
-  gotoDetails(ColdStoreTransaction currentTransaction) {
+  gotoDetails(ColdStoreInTransaction currentTransaction) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => RecordDetails(currentTransaction)));
   }
 }
 
 
-getCurrentPercentage(ColdStoreTransaction currentTransaction) {
+getCurrentPercentage(ColdStoreInTransaction currentTransaction) {
   if (currentTransaction.noOfBori != '' && currentTransaction.noOfTora != '')
-    return (int.parse(currentTransaction.noOfBori) * 2 +
-            int.parse(currentTransaction.noOfTora) -
-            int.parse(currentTransaction.remainingBori) * 2 -
-            int.parse(currentTransaction.remainingTora)) /
-        100;
+    return 1-((int.parse(currentTransaction.remainingBori)*2+int.parse(currentTransaction.remainingTora))
+        /(int.parse(currentTransaction.noOfBori)*2+int.parse(currentTransaction.noOfTora)));
   else {
     if (currentTransaction.noOfTora == '') {
-      return (int.parse(currentTransaction.noOfBori) * 2 -
-              int.parse(currentTransaction.remainingBori) * 2) /
-          100;
+     return 1-(int.parse(currentTransaction.remainingBori)*2)/(int.parse(currentTransaction.noOfBori)*2);
     } else {
-      return (int.parse(currentTransaction.noOfTora) -
-              int.parse(currentTransaction.remainingTora)) /
-          100;
+     return 1-(int.parse(currentTransaction.remainingTora))/(int.parse(currentTransaction.noOfTora));
     }
   }
 }
