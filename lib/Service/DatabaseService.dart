@@ -53,7 +53,7 @@ class DatabaseService {
         .documentID;
   }
 
-  Stream<List<ColdStoreInTransaction>> getAllFuelTransactions() {
+  Stream<List<ColdStoreInTransaction>> getAllInTransactions() {
     return inTransactionCollection
         .snapshots()
         .map(_inTransactionDataListFromSnapshot);

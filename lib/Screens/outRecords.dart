@@ -293,6 +293,10 @@ class _OutRecordState extends State<OutRecord> {
 
 
   void setValues() {
+    if(widget.currentTransaction.remainingBori=='')
+      widget.currentTransaction.remainingBori='0';
+    if(widget.currentTransaction.remainingTora=='')
+      widget.currentTransaction.remainingTora='0';
     boriList = List.generate(
       int.parse(widget.currentTransaction.remainingBori),
       (index) => new DropdownMenuItem(
